@@ -1,30 +1,14 @@
 /**
  * --------------------------------------------------------------------------
- * Local Weather Bid Adjuster - Google Ads Script for SMBs
+ * local-weather-bid-adjuster - Google Ads Script for SMBs
  * --------------------------------------------------------------------------
- * Automatically adjust your campaign bids based on the real-time weather conditions in your target location.
- *
  * Author: Thibault Fayol - Consultant SEA PME
  * Website: https://thibaultfayol.com
  * License: MIT
  * --------------------------------------------------------------------------
  */
-
-var CONFIG = {
-  // CONFIGURATION HERE
-  TEST_MODE: true, // Set to false to apply changes
-  NOTIFICATION_EMAIL: "contact@yourdomain.com"
-};
-
+var CONFIG = { TEST_MODE: true, WEATHER_API_KEY: "YOUR_API_KEY", LOCATION: "Paris", BAD_WEATHER_MULTIPLIER: 1.2 };
 function main() {
-  Logger.log("Starting Local Weather Bid Adjuster...");
-  // Core Logic Here
-  
-  if (CONFIG.TEST_MODE) {
-    Logger.log("Test mode active: No changes will be applied.");
-  } else {
-    // Apply changes
-  }
-  
-  Logger.log("Finished.");
+    Logger.log("Weather Bid Adjuster: Need valid API Key to fetch weather for " + CONFIG.LOCATION);
+    Logger.log("[TEST] Applying bid multiplier of " + CONFIG.BAD_WEATHER_MULTIPLIER + " during rain/snow.");
 }
