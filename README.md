@@ -16,6 +16,8 @@ Script Google Ads pour automatiser votre gestion SEA.
 For local businesses, weather impacts sales. Automatically bid higher when it rains or freezes, right from Google Ads.
 - **Keywords/SEO:** script météo google ads, weather bidding script ads, script enchères météo locale
 
+> ⚠️ **Prerequisite**: This script requires a free **OpenWeatherMap API Key**. You must insert this key in the `CONFIG` object inside the code before running it.
+
 ## ⚙️ Setup
 1. In **Google Ads → Tools & settings → Scripts → New script**.
 2. Paste the content of `main_en.gs`.
@@ -28,6 +30,8 @@ For local businesses, weather impacts sales. Automatically bid higher when it ra
 ## 🎯 Ce que fait le script
 Pour les PME locales, la météo impacte les ventes. Ce script ajuste les enchères en fonction de la météo locale.
 - **Mots-clés/SEO :** script météo google ads, weather bidding script ads, script enchères météo locale
+
+> ⚠️ **Prérequis** : Ce script nécessite une **Clé API OpenWeatherMap** (gratuite). Vous devez insérer cette clé dans l'objet `CONFIG` au sein du code avant de l'exécuter.
 
 ## ⚙️ Installation
 1. Dans **Google Ads → Outils & paramètres → Scripts → Nouveau script**.
