@@ -2,13 +2,44 @@
  * --------------------------------------------------------------------------
  * local-weather-bid-adjuster - Google Ads Script for SMBs
  * --------------------------------------------------------------------------
- * Author: Thibault Fayol - Consultant SEA PME
- * Website: https://thibaultfayol.com
- * License: MIT
+ * Auteur : Thibault Fayol - Consultant SEA PME
+ * Site web : https://thibaultfayol.com
+ * Licence : MIT
  * --------------------------------------------------------------------------
  */
-var CONFIG = { TEST_MODE: true, WEATHER_API_KEY: "VOTRE_CLE_API", LOCATION: "Paris", BAD_WEATHER_MULTIPLIER: 1.2 };
+
+var CONFIG = {
+  TEST_MODE: true,
+  OPENWEATHER_API_KEY: "VOTRE_CLE_API_ICI",
+  CITY: "Montpellier,FR",
+  CAMPAIGN_NAME_CONTAINS: "Local",
+  BID_MULTIPLIER_RAIN: 1.2, // +20% during rain
+  BID_MULTIPLIER_SUN: 1.0   // Reset to normal
+};
 function main() {
-    Logger.log("Weather Bid Adjuster: Nécessite une clé API valide pour la météo de " + CONFIG.LOCATION);
-    Logger.log("[TEST] Application d'un multiplicateur de " + CONFIG.BAD_WEATHER_MULTIPLIER + " pendant la pluie/neige.");
+  if (CONFIG.OPENWEATHER_API_KEY === "INSERT_API_KEY_HERE") {
+    Logger.log("Veuillez insérer votre clé API OpenWeatherMap dans CONFIG.");
+    return;
+  }
+  var url = "https://api.openweathermap.org/data/2.5/weather?q=" + encodeURIComponent(CONFIG.CITY) + "&appid=" + CONFIG.OPENWEATHER_API_KEY;
+  try {
+    var response = UrlFetchApp.fetch(url);
+    var weather = JSON.parse(response.getContentText());
+    var condition = weather.weather[0].main; // e.g., 'Rain', 'Clear'
+    Logger.log("Current weather in " + CONFIG.CITY + ": " + condition);
+    
+    var multiplier = (condition === "Rain" || condition === "Snow") ? CONFIG.BID_MULTIPLIER_RAIN : CONFIG.BID_MULTIPLIER_SUN;
+    
+    var campIter = AdsApp.campaigns().withCondition("Name CONTAINS_IGNORE_CASE '" + CONFIG.CAMPAIGN_NAME_CONTAINS + "'").withCondition("Status = ENABLED").get();
+    while (campIter.hasNext()) {
+        var camp = campIter.next();
+        var currentAdj = camp.bidding().getBidModifier();
+        if (currentAdj !== multiplier) {
+            Logger.log("Adjusting " + camp.getName() + " multiplier to " + multiplier);
+            if (!CONFIG.TEST_MODE) camp.bidding().setBidModifier(multiplier);
+        }
+    }
+  } catch (e) {
+    Logger.log("Error fetching weather: " + e.message);
+  }
 }
