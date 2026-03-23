@@ -1,1 +1,0 @@
-Veuillez lire le fichier README.md principal.

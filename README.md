@@ -1,50 +1,47 @@
 # Local Weather Bid Adjuster
 
-Google Ads Script to automate your workflow.  
-Script Google Ads pour automatiser votre gestion SEA.  
+> Google Ads Script for SMBs — Adjust campaign budgets based on real-time weather conditions.
 
----
-## 🌍 Languages | Langues
-- 🇬🇧 English version → below  
-- 🇫🇷 Version française → plus bas  
+## What it does
 
----
+This script fetches current weather data from the OpenWeatherMap API and adjusts campaign daily budgets accordingly. When bad weather is detected (rain, snow, drizzle, thunderstorm), it multiplies the base budget by a configurable factor. When weather is normal, it restores budgets to their base value. An email alert is sent whenever budgets are changed.
 
-# 🇬🇧 English: Local Weather Bid Adjuster
+## Setup
 
-## 🎯 What it does
-For local businesses, weather impacts sales. Automatically bid higher when it rains or freezes, right from Google Ads.
-- **Keywords/SEO:** script météo google ads, weather bidding script ads, script enchères météo locale
+1. Open Google Ads > Tools > Scripts
+2. Create a new script and paste the code from `main_en.gs` (or `main_fr.gs` for French)
+3. Update the `CONFIG` block at the top (API key, city, campaign filter, budgets)
+4. Authorize and run a preview first
+5. Schedule: **Every hour** (weather changes frequently)
 
-> ⚠️ **Prerequisite**: This script requires a free **OpenWeatherMap API Key**. You must insert this key in the `CONFIG` object inside the code before running it.
+## CONFIG reference
 
-## ⚙️ Setup
-1. In **Google Ads → Tools & settings → Scripts → New script**.
-2. Paste the content of `main_en.gs`.
-3. Set `TEST_MODE = true` for safety, then preview.
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `TEST_MODE` | `true` | When true, logs changes without applying them |
+| `EMAIL` | `contact@yourdomain.com` | Email address for budget change alerts |
+| `OPENWEATHER_API_KEY` | `INSERT_API_KEY_HERE` | Your free OpenWeatherMap API key |
+| `CITY` | `Montpellier,FR` | City and country code for weather lookup |
+| `CAMPAIGN_NAME_CONTAINS` | `Local` | Only adjust campaigns whose name contains this string |
+| `BASE_BUDGET` | `50.00` | Normal daily budget (currency units) |
+| `WEATHER_THRESHOLD` | `['Rain','Snow','Drizzle','Thunderstorm']` | Weather conditions that trigger a budget boost |
+| `BUDGET_MULTIPLIER` | `1.3` | Budget multiplier during bad weather (1.3 = +30%) |
 
----
+## How it works
 
-# 🇫🇷 Français : Local Weather Bid Adjuster
+1. Calls the OpenWeatherMap current weather API for the configured city
+2. Checks if the main weather condition matches any value in `WEATHER_THRESHOLD`
+3. Calculates the target budget: `BASE_BUDGET * BUDGET_MULTIPLIER` (bad weather) or `BASE_BUDGET` (normal)
+4. Iterates over enabled campaigns matching `CAMPAIGN_NAME_CONTAINS` and adjusts their daily budget
+5. Sends an email summary of all adjusted campaigns
 
-## 🎯 Ce que fait le script
-Pour les PME locales, la météo impacte les ventes. Ce script ajuste les enchères en fonction de la météo locale.
-- **Mots-clés/SEO :** script météo google ads, weather bidding script ads, script enchères météo locale
+**Note:** This script adjusts the campaign daily budget (not bid modifiers), which is the reliable approach in Google Ads Scripts.
 
-> ⚠️ **Prérequis** : Ce script nécessite une **Clé API OpenWeatherMap** (gratuite). Vous devez insérer cette clé dans l'objet `CONFIG` au sein du code avant de l'exécuter.
+## Requirements
 
-## ⚙️ Installation
-1. Dans **Google Ads → Outils & paramètres → Scripts → Nouveau script**.
-2. Collez le contenu de `main_fr.gs`.
-3. Paramétrez `TEST_MODE = true` par sécurité, puis Prévisualiser.
+- Google Ads account with Scripts access
+- Free OpenWeatherMap API key ([get one here](https://openweathermap.org/api))
 
----
-## 👤 Author | Auteur
-**Thibault Fayol – Consultant SEA PME**  
-🔗 Website: [https://thibaultfayol.com](https://thibaultfayol.com)  
+## License
 
-💡 *L'automatisation métier est la clé des PME locales. Créons ensemble des règles personnalisées pour votre activité.* | *Business-tailored automation is standard for local SMBs. Let's create custom rules for your activity.*
-
----
-## 📄 License | Licence
-MIT
+MIT — Thibault Fayol Consulting
